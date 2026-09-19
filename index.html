@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="One grounded affirmation for today. Same day, same line."
+    />
+    <title>Today — Daily Affirmation</title>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#affirmation">Skip to today’s affirmation</a>
+
+    <div class="page">
+      <header class="site-header">
+        <p class="wordmark">Today</p>
+        <p class="tagline">One line to come back to</p>
+      </header>
+
+      <main class="hero">
+        <p class="date" id="date-label"></p>
+        <h1 class="affirmation" id="affirmation" tabindex="-1"></h1>
+        <p class="sr-only" id="save-status" aria-live="polite"></p>
+        <button type="button" class="save-btn" id="save-btn" aria-pressed="false">
+          Save to favorites
+        </button>
+      </main>
+
+      <section class="favorites-wrap" aria-labelledby="favorites-heading">
+        <details class="favorites" id="favorites">
+          <summary>
+            <span id="favorites-heading">Favorites</span>
+            <span class="fav-count" id="fav-count" aria-hidden="true">0</span>
+          </summary>
+          <p class="favorites-hint" id="favorites-empty">
+            Nothing saved yet. If a line lands, keep it here.
+          </p>
+          <ul class="favorites-list" id="favorites-list"></ul>
+        </details>
+      </section>
+
+      <footer class="site-footer">
+        <p>The line stays the same until the calendar day changes.</p>
+      </footer>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
