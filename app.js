@@ -1,7 +1,7 @@
 const STORAGE_KEY = "daily-affirmations:favorites";
 
-const HEART_SVG =
-  '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.4s-6.8-4.2-9.4-8.1C.8 9.6 1.7 6.2 4.8 5.2a4.7 4.7 0 0 1 5.4 1.5A4.7 4.7 0 0 1 19.2 5.2c3.1 1 4 4.4 2.2 7.1-2.6 3.9-9.4 8.1-9.4 8.1z"/></svg>';
+const HEART_PATH =
+  "M12 20.7 10.7 19.5C5.4 14.7 2 11.6 2 7.9 2 4.9 4.4 2.5 7.4 2.5c1.7 0 3.4.8 4.6 2.1 1.2-1.3 2.9-2.1 4.6-2.1 3 0 5.4 2.4 5.4 5.4 0 3.7-3.4 6.8-8.7 11.6L12 20.7z";
 
 const CATEGORIES = [
   {
@@ -221,6 +221,18 @@ function toggleFavorite(id) {
   renderFavorites();
 }
 
+function heartIcon() {
+  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  svg.setAttribute("viewBox", "0 0 24 24");
+  svg.setAttribute("aria-hidden", "true");
+  svg.setAttribute("focusable", "false");
+
+  const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  path.setAttribute("d", HEART_PATH);
+  svg.append(path);
+  return svg;
+}
+
 function heartButton(id, text) {
   const saved = isFavorite(id);
   const button = document.createElement("button");
@@ -228,8 +240,11 @@ function heartButton(id, text) {
   button.className = "heart";
   button.setAttribute("data-toggle", id);
   button.setAttribute("aria-pressed", String(saved));
-  button.setAttribute("aria-label", saved ? `Remove from favorites: ${text}` : `Add to favorites: ${text}`);
-  button.innerHTML = HEART_SVG;
+  button.setAttribute(
+    "aria-label",
+    saved ? `Remove from favorites: ${text}` : `Save to favorites: ${text}`,
+  );
+  button.append(heartIcon());
   return button;
 }
 
