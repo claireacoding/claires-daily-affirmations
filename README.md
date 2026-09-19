@@ -46,7 +46,7 @@ The page looks at **today’s local calendar date** (year, month, and day on you
 - It does not use the clock time, only the date.
 - It does not talk to a server. The lists live in `app.js` — about 24 original lines in each category.
 
-The lines are meant to sound grounded and kind — more “enough, on purpose” than hype.
+The lines are original and gently spiritual — presence, trust, gratitude, inner light — without doctrine or hype.
 
 ## Files
 
