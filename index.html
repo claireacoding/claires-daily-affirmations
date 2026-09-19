@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
-      content="One grounded affirmation for today. Same day, same line."
+      content="Three grounded affirmations for today: money, health, and self. Same day, same three lines."
     />
-    <title>Today — Daily Affirmation</title>
+    <title>Today — Daily Affirmations</title>
     <link rel="icon" href="favicon.svg" type="image/svg+xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -18,21 +18,19 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <a class="skip-link" href="#affirmation">Skip to today’s affirmation</a>
+    <a class="skip-link" href="#daily">Skip to today’s affirmations</a>
 
     <div class="page">
       <header class="site-header">
         <p class="wordmark">Today</p>
-        <p class="tagline">One line to come back to</p>
+        <p class="tagline">Three lines for the day</p>
+        <p class="date" id="date-label"></p>
       </header>
 
-      <main class="hero">
-        <p class="date" id="date-label"></p>
-        <h1 class="affirmation" id="affirmation" tabindex="-1"></h1>
+      <main id="daily" class="daily">
+        <h1 class="sr-only">Today’s affirmations</h1>
+        <div id="cards" class="cards"></div>
         <p class="sr-only" id="save-status" aria-live="polite"></p>
-        <button type="button" class="save-btn" id="save-btn" aria-pressed="false">
-          Save to favorites
-        </button>
       </main>
 
       <section class="favorites-wrap" aria-labelledby="favorites-heading">
@@ -42,14 +40,14 @@
             <span class="fav-count" id="fav-count" aria-hidden="true">0</span>
           </summary>
           <p class="favorites-hint" id="favorites-empty">
-            Nothing saved yet. If a line lands, keep it here.
+            Nothing saved yet. Tap a heart if a line lands.
           </p>
           <ul class="favorites-list" id="favorites-list"></ul>
         </details>
       </section>
 
       <footer class="site-footer">
-        <p>The line stays the same until the calendar day changes.</p>
+        <p>These three stay the same until the calendar day changes.</p>
       </footer>
     </div>
 
