@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
-      content="Three grounded affirmations for today: money, health, and self. Same day, same three lines."
+      content="Three grounded affirmations for today, and a quiet place to write. Same day, same lines and prompt."
     />
     <title>Today — Daily Affirmations</title>
     <link rel="icon" href="favicon.svg" type="image/svg+xml" />
@@ -23,13 +23,44 @@
     <div class="page">
       <header class="site-header">
         <p class="wordmark">Today</p>
-        <p class="tagline">Three lines for the day</p>
+        <p class="tagline">Three lines, and a quiet note</p>
         <p class="date" id="date-label"></p>
       </header>
 
       <main id="daily" class="daily">
-        <h1 class="sr-only">Today’s affirmations</h1>
+        <h1 class="sr-only">Today’s affirmations and journal</h1>
         <div id="cards" class="cards"></div>
+
+        <section class="journal" aria-labelledby="journal-heading">
+          <div class="journal-card">
+            <h2 class="category" id="journal-heading">Journal</h2>
+            <p class="journal-prompt" id="journal-prompt"></p>
+            <label class="sr-only" for="journal-entry">Your note for today</label>
+            <textarea
+              id="journal-entry"
+              class="journal-entry"
+              rows="6"
+              placeholder="A few honest lines are enough."
+              aria-describedby="journal-prompt"
+            ></textarea>
+            <div class="journal-actions">
+              <button type="button" class="journal-save" id="journal-save">
+                Save today’s note
+              </button>
+              <p class="journal-status" id="journal-status" role="status"></p>
+            </div>
+
+            <details class="journal-past" id="journal-past">
+              <summary>
+                <span id="journal-past-heading">Past notes</span>
+                <span class="fav-count" id="journal-count" aria-hidden="true">0</span>
+              </summary>
+              <p class="journal-empty" id="journal-empty">Earlier notes will gather here.</p>
+              <ul class="journal-list" id="journal-list"></ul>
+            </details>
+          </div>
+        </section>
+
         <p class="sr-only" id="save-status" aria-live="polite"></p>
       </main>
 
@@ -47,7 +78,7 @@
       </section>
 
       <footer class="site-footer">
-        <p>These three stay the same until the calendar day changes.</p>
+        <p>Today’s three lines and journaling prompt stay the same until the calendar day changes.</p>
       </footer>
     </div>
 
