@@ -1,4 +1,5 @@
 const STORAGE_KEY = "daily-affirmations:favorites";
+const JOURNAL_KEY = "daily-affirmations:journal";
 
 const HEART_PATH =
   "M12 20.7 10.7 19.5C5.4 14.7 2 11.6 2 7.9 2 4.9 4.4 2.5 7.4 2.5c1.7 0 3.4.8 4.6 2.1 1.2-1.3 2.9-2.1 4.6-2.1 3 0 5.4 2.4 5.4 5.4 0 3.7-3.4 6.8-8.7 11.6L12 20.7z";
@@ -99,7 +100,33 @@ const CATEGORIES = [
   },
 ];
 
+const JOURNAL_PROMPTS = [
+  "What felt quietly true today, even if it was small?",
+  "Where did you notice enough, even for a moment?",
+  "What would you like to thank your body for today?",
+  "What are you ready to set down before the day ends?",
+  "Where did you feel most like yourself?",
+  "What can you meet with gentleness tonight?",
+  "What would you like to carry lightly into tomorrow?",
+  "Where did peace visit you, even briefly?",
+  "If you paused, what did your inner knowing say?",
+  "What would enough look like in this hour?",
+  "Who or what held you today, even in a small way?",
+  "What are you allowed to leave unfinished?",
+  "Where did gratitude sit beside something hard?",
+  "What small promise can you keep with your spirit tonight?",
+  "What do you want to remember about this day?",
+  "What is asking for your softness rather than your effort?",
+];
+
 const dateLabel = document.getElementById("date-label");
+const journalPromptEl = document.getElementById("journal-prompt");
+const journalEntry = document.getElementById("journal-entry");
+const journalSave = document.getElementById("journal-save");
+const journalStatus = document.getElementById("journal-status");
+const journalCount = document.getElementById("journal-count");
+const journalEmpty = document.getElementById("journal-empty");
+const journalList = document.getElementById("journal-list");
 const cardsEl = document.getElementById("cards");
 const saveStatus = document.getElementById("save-status");
 const favCount = document.getElementById("fav-count");
@@ -117,9 +144,13 @@ const todaysPicks = CATEGORIES.map((category) => {
   };
 });
 
+const todayKey = dateKey(today);
+const todaysPrompt = JOURNAL_PROMPTS[dailyIndex(today, JOURNAL_PROMPTS.length, 53)];
+
 dateLabel.textContent = formatSoftDate(today);
 renderCards();
 renderFavorites();
+renderJournal();
 
 cardsEl.addEventListener("click", (event) => {
   const button = event.target.closest("[data-toggle]");
@@ -132,6 +163,23 @@ favoritesList.addEventListener("click", (event) => {
   if (!button) return;
   toggleFavorite(button.getAttribute("data-toggle"));
 });
+
+journalSave.addEventListener("click", saveTodayJournal);
+
+journalEntry.addEventListener("input", () => {
+  if (journalStatus.textContent) journalStatus.textContent = "";
+});
+
+function dateKey(date) {
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${date.getFullYear()}-${month}-${day}`;
+}
+
+function parseDateKey(key) {
+  const [year, month, day] = key.split("-").map(Number);
+  return new Date(year, month - 1, day);
+}
 
 function formatSoftDate(date) {
   return date.toLocaleDateString("en-US", {
@@ -297,5 +345,97 @@ function renderFavorites() {
     copy.append(category, text);
     row.append(copy, heartButton(item.id, item.text));
     favoritesList.append(row);
+  }
+}
+
+function readJournal() {
+  try {
+    const raw = localStorage.getItem(JOURNAL_KEY);
+    const parsed = raw ? JSON.parse(raw) : {};
+    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) return {};
+
+    const entries = {};
+    for (const [key, value] of Object.entries(parsed)) {
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(key)) continue;
+      if (!value || typeof value.text !== "string") continue;
+      const text = value.text.trim();
+      if (!text) continue;
+      entries[key] = {
+        prompt: typeof value.prompt === "string" ? value.prompt : "",
+        text,
+      };
+    }
+    return entries;
+  } catch {
+    return {};
+  }
+}
+
+function writeJournal(entries) {
+  localStorage.setItem(JOURNAL_KEY, JSON.stringify(entries));
+}
+
+function renderJournal() {
+  const saved = readJournal()[todayKey];
+  journalPromptEl.textContent = todaysPrompt;
+  journalEntry.value = saved ? saved.text : "";
+  journalStatus.textContent = saved ? "Saved for today." : "";
+  renderJournalHistory();
+}
+
+function saveTodayJournal() {
+  const text = journalEntry.value.trim();
+  const entries = readJournal();
+  const hadEntry = Boolean(entries[todayKey]);
+
+  if (!text && !hadEntry) return;
+
+  if (text) {
+    entries[todayKey] = { prompt: todaysPrompt, text };
+  } else {
+    delete entries[todayKey];
+  }
+
+  try {
+    writeJournal(entries);
+    journalEntry.value = text;
+    journalStatus.textContent = text ? "Saved for today." : "Cleared today’s note.";
+  } catch {
+    journalStatus.textContent = "Couldn’t save in this browser.";
+  }
+
+  renderJournalHistory();
+}
+
+function renderJournalHistory() {
+  const past = Object.entries(readJournal())
+    .filter(([key]) => key !== todayKey)
+    .sort(([a], [b]) => (a < b ? 1 : -1));
+
+  journalCount.textContent = String(past.length);
+  journalEmpty.hidden = past.length > 0;
+  journalList.replaceChildren();
+
+  for (const [key, entry] of past) {
+    const item = document.createElement("li");
+    item.className = "journal-item";
+
+    const date = document.createElement("p");
+    date.className = "journal-item-date";
+    date.textContent = formatSoftDate(parseDateKey(key));
+
+    const text = document.createElement("p");
+    text.className = "journal-item-text";
+    text.textContent = entry.text;
+
+    item.append(date);
+    if (entry.prompt) {
+      const prompt = document.createElement("p");
+      prompt.className = "journal-item-prompt";
+      prompt.textContent = entry.prompt;
+      item.append(prompt);
+    }
+    item.append(text);
+    journalList.append(item);
   }
 }
