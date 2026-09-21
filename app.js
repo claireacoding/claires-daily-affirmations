@@ -379,6 +379,7 @@ function renderJournal() {
   const saved = readJournal()[todayKey];
   journalPromptEl.textContent = todaysPrompt;
   journalEntry.value = saved ? saved.text : "";
+  journalStatus.textContent = saved ? "Saved for today." : "";
   renderJournalHistory();
 }
 
